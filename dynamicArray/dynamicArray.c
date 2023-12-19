@@ -150,6 +150,7 @@ int dynamicArrayDeleteData(dynamicArray *pArray)
     return dynamicArrayDeleteAppointPosData(pArray, pArray->len - 1);
 }
 
+/* 动态数组缩容 */
 static int shrinkDynamicCapacity(dynamicArray *pArray)
 {
     // if (pArray == NULL)
@@ -284,5 +285,25 @@ int dynamicArrayGetCapacity(dynamicArray *pArray, int *pCapacity)
     }
     
     return ON_SUCCESS;
+}
+
+/* 获取指定位置的元素数据 */
+int dynamicArrayGetAppointPosVal(dynamicArray *pArray, int pos, ELEMENTTYPE *pVal)
+{
+   if (pArray == NULL)
+   {
+      return NULL_PTR;
+   }
+   
+   if (pos < 0 || pos >= pArray->len)
+   {
+      return INVALID_ACCESS;
+   }
+
+   if (pVal != NULL)
+   {
+      *pVal = pArray->data[pos];
+   }
+   return ON_SUCCESS;
 }
 
