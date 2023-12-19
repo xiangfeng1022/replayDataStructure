@@ -61,7 +61,7 @@ static int expandDynamicCapacity(dynamicArray *pArray)
     
     /* 备份指针 */
     ELEMENTTYPE *tmpPtr = pArray->data;
-    pArray->data = (ELEMENTTYPE *)(sizeof(ELEMENTTYPE) * needExpandCapacity);
+    pArray->data = (ELEMENTTYPE *)malloc(sizeof(ELEMENTTYPE) * needExpandCapacity);
     if (pArray->data == NULL)
     {
         return MALLOC_ERROR;
