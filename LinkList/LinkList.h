@@ -16,7 +16,7 @@ typedef struct LinkList
 {  
    /* 链表的虚拟头结点:数据域无意义 只使用指针域*/    
    LinkNode * head;
-
+   LinkNode * tail;    /* 为什么尾指针不需要分配空间??? */
    int len;  /* 链表的长度 */
 
 }LinkList;
