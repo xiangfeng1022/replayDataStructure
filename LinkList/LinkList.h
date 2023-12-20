@@ -1,7 +1,7 @@
 #ifndef __LINKLIST_H_
 #define __LINKLIST_H_
 
-#define ELEMENTTYPE int
+#define ELEMENTTYPE void*
 
 /* 链表结点取别名 */
 typedef struct LinkNode
@@ -53,6 +53,6 @@ int LinkListGetLength(LinkList * pList, int *pSize);
 int LinkListDestroy(LinkList * pList);
 
 /* 链表遍历接口 */
-int LinkListForeach(LinkList * pList);
+int LinkListForeach(LinkList * pList, int (*printFunc)(ELEMENTTYPE));
 
 #endif

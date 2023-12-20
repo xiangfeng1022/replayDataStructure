@@ -1,6 +1,7 @@
 #include "LinkList.h"
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
 
 enum STATUS_CODE
 {
@@ -280,7 +281,7 @@ int LinkListDestroy(LinkList *pList)
 }
 
 /* 链表遍历接口 */
-int LinkListForeach(LinkList *pList)
+int LinkListForeach(LinkList *pList, int (*printFunc)(ELEMENTTYPE))
 {
     int ret = 0;
     if (pList == NULL)
@@ -300,9 +301,14 @@ int LinkListForeach(LinkList *pList)
 
     /* travelNode指向链表第一个元素 */
     LinkNode *travelNode = pList->head->next;
-    while (travelNode->next != NULL)
-    {
+    while (travelNode != NULL)
+    {   
+#if 0
         printf("travelNode->data:%d\n", travelNode->data);
+#else
+        /* 包装器 钩子 回调函数 */
+        printFunc(travelNode->data);
+#endif
         travelNode = travelNode->next;
     }
 
