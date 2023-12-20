@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include "LinkList.h"
+#include <string.h>
+
 /* 动态数组和链表的区别 
     静态数组: 不够灵活，可能会浪费空间 在栈区开辟一块连续的内存
     动态数组：在堆区开辟一块连续的内存： 
