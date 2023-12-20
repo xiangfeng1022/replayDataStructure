@@ -225,7 +225,6 @@ int LinkListDelAppointData(LinkList *pList, ELEMENTTYPE val)
        LinkListAccordAppointValGetPos(pList, val, &pos);
        LinkListDelAppointPos(pList, pos);
     }
-    
     return ret;
 }
 
