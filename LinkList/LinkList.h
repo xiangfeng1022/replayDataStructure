@@ -3,6 +3,7 @@
 
 #define ELEMENTTYPE int
 
+/* 链表结点取别名 */
 typedef struct LinkNode
 {
     ELEMENTTYPE data;
