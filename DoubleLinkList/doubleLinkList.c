@@ -221,6 +221,7 @@ int DoubleLinkListDelAppointPos(DoubleLinkList *pList, int pos)
         needDelNode->next->prev = travelNode;
     }
 
+
     /* 释放内存 */
     if (needDelNode != NULL)
     {
@@ -354,4 +355,28 @@ int DoubleLinkListForeach(DoubleLinkList *pList, int (*printFunc)(ELEMENTTYPE))
 #endif
 
     return ret;
+}
+
+/* 双向链表逆序打印 */
+int DoubleLinkListReverseForeach(DoubleLinkList * pList, int (*printFunc)(ELEMENTTYPE))
+{
+    
+    int ret = 0;
+    if (pList == NULL)
+    {
+        return NULL_PTR;
+    }
+    
+    DoubleLinkNode *travelNode = pList->tail;
+
+    while (travelNode != pList->head)
+    {
+
+        /* 包装器 钩子 回调函数 */
+        printFunc(travelNode->data);
+
+        travelNode = travelNode->prev;
+    }
+    return ret;
+
 }
