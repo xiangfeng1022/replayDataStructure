@@ -2,8 +2,10 @@
 #include <stdio.h>
 
 #define BUFFER_SIZE 5
+
 int main()
 {   
+    
     DoubleLinkListQueue *queue = NULL;
     doubleLinkListQueueInit(&queue);
     
