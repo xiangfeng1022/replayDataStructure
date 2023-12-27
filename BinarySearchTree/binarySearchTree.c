@@ -106,12 +106,13 @@ static int binarySearchTreeNodeIsLeaf(BSTreeNode *node)
 }
 
 /* 获取当前结点的前驱结点 */
+/* 中序遍历到结点的前一个结点 */
 static BSTreeNode *bstreeNodePreDecessor(BSTreeNode *node)
 {
-    /* 度为2 */
-    if (binarySearchTreeNodeHasTwochildrens(node))
+
+    if (node->left != NULL)
     {
-        /* 度为2, 前驱结点是在左子树的右子树的右子树... */
+        /* 前驱结点是在左子树的右子树的右子树... */
         BSTreeNode *travelNode = node->left;
         while (travelNode->right != NULL)
         {
@@ -119,17 +120,21 @@ static BSTreeNode *bstreeNodePreDecessor(BSTreeNode *node)
         }
         return travelNode;
     }
-    /* 程序到这个地方一定是度为1 或者 度为0的. */
-
-    /* 度为1 */
-
-    /* 度为0 */
+    
+    /* 程序执行到这个地方 说明一定没有左子树。那就需要向父结点找 */
+    while (node->parent != NULL && node == node->parent->left)
+    {
+        node = node->parent;
+    }
+    /* node->parent == NULL. */
+    /* node == node->parent->right. */
+    return node->parent;
 }
 
 /* 获取当前结点的后继结点 */
 static BSTreeNode *bstreeNodeSuccessor(BSTreeNode *node)
 {
-
+    
 }
 
 static BSTreeNode *createBSTreeNewNode(ELEMENTTYPE val, BSTreeNode *parent)
@@ -395,35 +400,35 @@ int binarySearchTreeIsContainAppointVal(BinarySearchTree *pBstree, ELEMENTTYPE v
 /* 获取二叉搜索树的高度 */
 /* 层序遍历的思路 */
 int binarySearchTreeGetHeight(BinarySearchTree *pBstree, int *pHeight)
-{   
+{
     if (pBstree == NULL)
     {
         return NULL_PTR;
     }
-    
+
     /* 判断是否为空树 */
     if (pBstree->size == 0)
     {
         return 0;
     }
     int ret;
-    DoubleLinkListQueue * pQueue = NULL;
+    DoubleLinkListQueue *pQueue = NULL;
     doubleLinkListQueueInit(&pQueue);
 
     /* 将根结点入队 */
     doubleLinkListQueuePush(pQueue, pBstree->root);
     /* 树的高度*/
     int height = 0;
-   /* 树每一层的结点数量 */ 
-   int levelSize = 1;
+    /* 树每一层的结点数量 */
+    int levelSize = 1;
 
-   BSTreeNode * travelNode = NULL;
-    while(!doubleLinkListQueueIsEmpty(pQueue))
+    BSTreeNode *travelNode = NULL;
+    while (!doubleLinkListQueueIsEmpty(pQueue))
     {
         doubleLinkListQueueTop(pQueue, (void **)&travelNode);
         doubleLinkListQueuePop(pQueue);
         levelSize--;
-        
+
         /* 左子树不为空 */
         if (travelNode->left != NULL)
         {
@@ -468,12 +473,12 @@ int binarySearchTreeDestroy(BinarySearchTree *pBstree)
     }
 
     int ret;
-    DoubleLinkListQueue * pQueue = NULL;
+    DoubleLinkListQueue *pQueue = NULL;
     doubleLinkListQueueInit(&pQueue);
     /* 将根结点入队 */
     doubleLinkListQueuePush(pQueue, pBstree->root);
-    
-    BSTreeNode * travelNode = NULL;
+
+    BSTreeNode *travelNode = NULL;
     while (!doubleLinkListQueueIsEmpty(pQueue))
     {
         doubleLinkListQueueTop(pQueue, (void **)&travelNode);
@@ -484,11 +489,11 @@ int binarySearchTreeDestroy(BinarySearchTree *pBstree)
             doubleLinkListQueuePush(pQueue, travelNode->left);
         }
 
-         if (travelNode->right != NULL)
+        if (travelNode->right != NULL)
         {
             doubleLinkListQueuePush(pQueue, travelNode->right);
         }
-        
+
         /* 最后释放 */
         if (travelNode)
         {
