@@ -470,11 +470,13 @@ int binarySearchTreeDestroy(BinarySearchTree *pBstree)
     int ret;
     DoubleLinkListQueue * pQueue = NULL;
     doubleLinkListQueueInit(&pQueue);
+    /* 将根结点入队 */
+    doubleLinkListQueuePush(pQueue, pBstree->root);
     
     BSTreeNode * travelNode = NULL;
     while (!doubleLinkListQueueIsEmpty(pQueue))
     {
-         doubleLinkListQueueTop(pQueue, (void **)&travelNode);
+        doubleLinkListQueueTop(pQueue, (void **)&travelNode);
         doubleLinkListQueuePop(pQueue);
 
         if (travelNode->left != NULL)
@@ -496,6 +498,7 @@ int binarySearchTreeDestroy(BinarySearchTree *pBstree)
     }
     /* 释放队列 */
     doubleLinkListQueueDestroy(pQueue);
+
     /* 释放树 */
     if (pBstree)
     {
