@@ -507,7 +507,7 @@ static int binarySearchTreeDeleteNode(BinarySearchTree *pBstree, BSTreeNode *nod
     /* 假设node结点是度为1的。它的child要么是左要么是右 */
     /* 假设node结点是度为0的 */
     BSTreeNode *child = node->left != NULL ? node->left : node->right;
-    BSTreeNode *tmpNode = NULL;
+    BSTreeNode * delNode = NULL;
     if (child)
     {   
         /* 度为1 */
@@ -517,12 +517,12 @@ static int binarySearchTreeDeleteNode(BinarySearchTree *pBstree, BSTreeNode *nod
         {   
             /* 度为1 且 它是根结点 */
             pBstree->root = child;
-
-            if (node)
-            {
-                free(node);
-                node = NULL;
-            }
+            delNode = node;
+            // if (node)
+            // {
+            //     free(node);
+            //     node = NULL;
+            // }
         }
         else
         {   
@@ -536,11 +536,12 @@ static int binarySearchTreeDeleteNode(BinarySearchTree *pBstree, BSTreeNode *nod
                 node->parent->right = child;
             }
             /* 释放结点 */
-            if (node)
-            {
-                free(node);
-                node = NULL;
-            }
+            delNode = node;
+            // if (node)
+            // {
+            //     free(node);
+            //     node = NULL;
+            // }
         }
        
     }
@@ -549,11 +550,12 @@ static int binarySearchTreeDeleteNode(BinarySearchTree *pBstree, BSTreeNode *nod
         /* 度为0 */
         if (node->parent == NULL)
         {
-             if (node)
-             {
-                free(node);
-                node = NULL;
-             }
+            delNode = node;
+            // if (node)
+            // {
+            //     free(node);
+            //     node = NULL;
+            // }
         }
         else
         {
@@ -566,13 +568,20 @@ static int binarySearchTreeDeleteNode(BinarySearchTree *pBstree, BSTreeNode *nod
                 node->parent->right = NULL;
             }
 
-            if (node)
-            {
-                free(node);
-                node = NULL;
-            }
+           delNode = node;
+            // if (node)
+            // {
+            //     free(node);
+            //     node = NULL;
+            // }
         }
     }
+    if (delNode)
+    {
+        free(delNode);
+        delNode = NULL;
+    }
+    return ret;
 }
 
 /* 二叉搜索树的删除 */
@@ -634,5 +643,14 @@ int binarySearchTreeDestroy(BinarySearchTree *pBstree)
         free(pBstree);
         pBstree = NULL;
     }
+    return ret;
+}
+
+/* 判断二叉搜索树是否为完全二叉搜索树 */
+int binarySearchTreeIsComplete(BinarySearchTree *pBSTree)
+{
+    int ret = 0;
+
+
     return ret;
 }

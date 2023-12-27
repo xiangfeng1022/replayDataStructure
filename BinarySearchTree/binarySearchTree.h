@@ -56,4 +56,9 @@ int binarySearchTreeDelete(BinarySearchTree *pBstree, ELEMENTTYPE val);
 
 /* 二叉搜索树的销毁 */
 int binarySearchTreeDestroy(BinarySearchTree *pBstree);
+
+/* 判断二叉搜索树是否为完全二叉搜索树 */
+int binarySearchTreeIsComplete(BinarySearchTree *pBSTree);
+
+
 #endif
