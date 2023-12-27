@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
+#include "doubleLinkListQueue.h"
 
 /* 状态码 */
 enum STATUS_CODE
@@ -182,7 +183,7 @@ int binarySearchTreeInsert(BinarySearchTree *pBstree, ELEMENTTYPE val)
 int binarySearchTreePreOrderTravel(BinarySearchTree *pBstree)
 {
     int ret = 0;
-
+    
     return ret;
 }
 
@@ -206,7 +207,36 @@ int binarySearchTreePostOrderTravel(BinarySearchTree *pBstree)
 int binarySearchTreeLeveOrderTravel(BinarySearchTree *pBstree)
 {
     int ret = 0;
+    DoubleLinkListQueue *pQueue = NULL;
+    doubleLinkListQueueInit(&pQueue);
 
+    /* 根结点入队 */
+    doubleLinkListQueuePush(pQueue, pBstree->root);
+    
+    /* 2. 判断队列是否为空 */
+    BSTreeNode *nodeVal = NULL;
+    while (!doubleLinkListQueueIsEmpty(pQueue))
+    {
+        doubleLinkListQueueTop(pQueue, (void **)&nodeVal);
+        printf ("data:%d\n", nodeVal->data);
+        doubleLinkListQueuePop(pQueue);
+
+        /* 将左子树入队. */
+        if (nodeVal->left != NULL)
+        {
+            doubleLinkListQueuePush(pQueue, nodeVal->left);
+        }
+
+        /* 将右子树入队. */
+        if (nodeVal->right != NULL)
+        {
+            doubleLinkListQueuePush(pQueue, nodeVal->right);
+        }
+    }
+
+    /* 释放队列 */
+    doubleLinkListQueueDestroy(pQueue);
+    
     return ret;
 }
 
@@ -216,8 +246,9 @@ static BSTreeNode * baseAppointValGetBSTreeNode(BinarySearchTree *pBstree, ELEME
      BSTreeNode * travelNode = pBstree->root;
      int cmp = 0;
      while (travelNode != NULL)
-     {  
-         cmp = pBstree->compareFunc(val, travelNode->data); 
+     {   
+        /* 比较大小 */
+        cmp = pBstree->compareFunc(val, travelNode->data); 
         if (cmp < 0)
         {
             travelNode = travelNode->left;
@@ -237,5 +268,5 @@ static BSTreeNode * baseAppointValGetBSTreeNode(BinarySearchTree *pBstree, ELEME
 /* 二叉搜索树是否包含指定的元素 */
 int binarySearchTreeIsContainAppointVal(BinarySearchTree *pBstree, ELEMENTTYPE val)
 {
-    baseAppointValGetBSTreeNode(pBstree, val);
+   return baseAppointValGetBSTreeNode(pBstree, val) == NULL ? 0 : 1;
 }
