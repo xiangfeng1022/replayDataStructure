@@ -19,7 +19,7 @@ enum STATUS_CODE
 /* 两个值比较大小 */
 static int compareFunc(ELEMENTTYPE val1, ELEMENTTYPE val2);
 /* 创建结点 */
-static AVLTreeNode *createBSTreeNewNode(ELEMENTTYPE val, AVLTreeNode *parent);
+static AVLTreeNode *createAVLTreeNewNode(ELEMENTTYPE val, AVLTreeNode *parent);
 /* 根据指定的值获取二叉搜索树的结点 */
 static AVLTreeNode *baseAppointValGetAVLTreeNode(BalanceBinarySearchTree *pBstree, ELEMENTTYPE val);
 /* 判断二叉搜索树度为2 */
@@ -40,6 +40,8 @@ static AVLTreeNode *bstreeNodePreDecessor(AVLTreeNode *node);
 static AVLTreeNode *bstreeNodeSuccessor(AVLTreeNode *node);
 /* 二叉搜索树删除指定的结点 */
 static int balanceBinarySearchTreeDeleteNode(BalanceBinarySearchTree *pBstree, AVLTreeNode *node);
+/* 添加结点之后的操作 */
+static int insertNodeAfter(AVLTreeNode * node);
 
 /* 二叉搜索树的初始化 */
 int balanceBinarySearchTreeInit(BalanceBinarySearchTree **pBstree, int (*compareFunc)(ELEMENTTYPE val1, ELEMENTTYPE val2), int (*printFunc)(ELEMENTTYPE val))
@@ -78,7 +80,7 @@ int balanceBinarySearchTreeInit(BalanceBinarySearchTree **pBstree, int (*compare
         bstree->root->parent = NULL;
     }
 #else
-    bstree->root = createBSTreeNewNode(0, NULL);
+    bstree->root = createAVLTreeNewNode(0, NULL);
     if (bstree->root == NULL)
     {
         return MALLOC_ERROR;
@@ -158,26 +160,27 @@ static AVLTreeNode *bstreeNodeSuccessor(AVLTreeNode *node)
     return node->parent;
 }
 
-static AVLTreeNode *createBSTreeNewNode(ELEMENTTYPE val, AVLTreeNode *parent)
+static AVLTreeNode *createAVLTreeNewNode(ELEMENTTYPE val, AVLTreeNode *parent)
 {
     /* 分配根结点 */
-    AVLTreeNode *newBstNode = (AVLTreeNode *)malloc(sizeof(AVLTreeNode) * 1);
-    if (newBstNode == NULL)
+    AVLTreeNode *newAVLNode = (AVLTreeNode *)malloc(sizeof(AVLTreeNode) * 1);
+    if (newAVLNode == NULL)
     {
         return NULL;
     }
-    memset(newBstNode, 0, sizeof(AVLTreeNode) * 1);
+    memset(newAVLNode, 0, sizeof(AVLTreeNode) * 1);
 
     {
-        newBstNode->data = 0;
-        newBstNode->left = NULL;
-        newBstNode->right = NULL;
-        newBstNode->parent = NULL;
+        newAVLNode->data = 0;
+        newAVLNode->height = 1;  /* 结点的高度为1 */
+        newAVLNode->left = NULL;
+        newAVLNode->right = NULL;
+        newAVLNode->parent = NULL;
     }
     /* 赋值 */
-    newBstNode->data = val;
-    newBstNode->parent = parent;
-    return newBstNode;
+    newAVLNode->data = val;
+    newAVLNode->parent = parent;
+    return newAVLNode;
 }
 #if 0 
 static int compareFunc(ELEMENTTYPE val1, ELEMENTTYPE val2)
@@ -185,6 +188,17 @@ static int compareFunc(ELEMENTTYPE val1, ELEMENTTYPE val2)
     return val1 - val2;
 }
 #endif
+
+/* 添加结点之后的操作 */
+static int insertNodeAfter(AVLTreeNode * node)
+{
+    int ret = 0;
+    
+
+
+    return ret;
+}
+
 /* 二叉搜索树的插入 */
 int balanceBinarySearchTreeInsert(BalanceBinarySearchTree *pBstree, ELEMENTTYPE val)
 {
@@ -196,6 +210,8 @@ int balanceBinarySearchTreeInsert(BalanceBinarySearchTree *pBstree, ELEMENTTYPE 
         (pBstree->size)++;
 
         pBstree->root->data = val;
+
+        insertNodeAfter(pBstree->root);
         return ret;
     }
 
@@ -229,38 +245,41 @@ int balanceBinarySearchTreeInsert(BalanceBinarySearchTree *pBstree, ELEMENTTYPE 
 
 #if 0
     /* 分配新结点 */
-    AVLTreeNode * newBstNode = (AVLTreeNode *)malloc(sizeof(AVLTreeNode) * 1);
-    if (newBstNode == NULL)
+    AVLTreeNode * newAVLNode = (AVLTreeNode *)malloc(sizeof(AVLTreeNode) * 1);
+    if (newAVLNode == NULL)
     {
         return MALLOC_ERROR;
     }
-    memset(newBstNode, 0, sizeof(AVLTreeNode) * 1);
+    memset(newAVLNode, 0, sizeof(AVLTreeNode) * 1);
     
     {
-        newBstNode->data = 0;
-        newBstNode->left = NULL;
-        newBstNode->right = NULL;
-        newBstNode->parent = NULL;
+        newAVLNode->data = 0;
+        newAVLNode->left = NULL;
+        newAVLNode->right = NULL;
+        newAVLNode->parent = NULL;
     }
     /* 新结点赋值 */
-    newBstNode->data = val;
+    newAVLNode->data = val;
 #else
-    AVLTreeNode *newBstNode = createBSTreeNewNode(val, parentNode);
+    AVLTreeNode *newAVLNode = createAVLTreeNewNode(val, parentNode);
 #endif
 
     /* 挂在左子树 */
     if (cmp < 0)
     {
-        parentNode->left = newBstNode;
+        parentNode->left = newAVLNode;
     }
     else
     {
         /* 挂在右子树 */
-        parentNode->right = newBstNode;
+        parentNode->right = newAVLNode;
     }
+    /* 添加之后的调整 */
+    insertNodeAfter(newAVLNode);
+    
 #if 0
     /* 新结点的parent指针赋值 */
-    newBstNode->parent = parentNode;
+    newAVLNode->parent = parentNode;
 #endif
     /* 更新树的结点 */
     (pBstree->size)++;

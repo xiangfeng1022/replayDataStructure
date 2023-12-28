@@ -7,6 +7,7 @@
 typedef struct AVLTreeNode
 { 
   ELEMENTTYPE data;
+  int height;                  /* 结点维护一个高度属性 */
   struct AVLTreeNode * left;   /* 左子树 */
   struct AVLTreeNode * right;  /* 右子树 */
   struct AVLTreeNode * parent; /* 父结点 */
