@@ -56,6 +56,10 @@ static int AVLTreeNodeUpdateHeight(AVLTreeNode *node);
 static int AVLTreeNodeAdjustBalance(BalanceBinarySearchTree *pBstree, AVLTreeNode * node);
 /* 获取AVL结点较高的子结点 */
 static AVLTreeNode * AVLTreeNodeGetChildTaller(AVLTreeNode * node);
+/* 当前结点是父结点的左子树 */
+static AVLTreeNode * AVLTreeCurrentNodeIsLeft(AVLTreeNode * node);
+/* 当前结点是父结点的右子树 */
+static AVLTreeNode * AVLTreeCurrentNodeIsRight(AVLTreeNode * node);
 
 /* 二叉搜索树的初始化 */
 int balanceBinarySearchTreeInit(BalanceBinarySearchTree **pBstree, int (*compareFunc)(ELEMENTTYPE val1, ELEMENTTYPE val2), int (*printFunc)(ELEMENTTYPE val))
@@ -103,6 +107,17 @@ int balanceBinarySearchTreeInit(BalanceBinarySearchTree **pBstree, int (*compare
 
     *pBstree = bstree;
     return ret;
+}
+
+/* 当前结点是父结点的左子树 */
+static AVLTreeNode * AVLTreeCurrentNodeIsLeft(AVLTreeNode * node)
+{
+     return (node->parent != NULL) && (node == node->parent->left);
+}
+/* 当前结点是父结点的右子树 */
+static AVLTreeNode * AVLTreeCurrentNodeIsRight(AVLTreeNode * node)
+{
+     return (node->parent != NULL) && (node == node->parent->right);
 }
 
 /* 计算结点的平衡因子 */
@@ -266,11 +281,11 @@ static AVLTreeNode * AVLTreeNodeGetChildTaller(AVLTreeNode * node)
     else
     {
         /* leftHeight == rightHeight */
-       if (node->parent != NULL && node == node->parent->left)
+       if (AVLTreeCurrentNodeIsLeft(node))
        {
           return node->left;
        }
-       else
+       else if (AVLTreeCurrentNodeIsLeft(node))
        {
           return node->right;
        }
@@ -287,16 +302,16 @@ static int AVLTreeNodeAdjustBalance(BalanceBinarySearchTree *pBstree, AVLTreeNod
     AVLTreeNode * parent = AVLTreeNodeGetChildTaller(node);
     AVLTreeNode * child = AVLTreeNodeGetChildTaller(parent);
     /* L */
-    if (parent == node->left)
+    if (AVLTreeCurrentNodeIsLeft(parent))
     {
-       if (child == parent->left)
+       if (AVLTreeCurrentNodeIsLeft(child))
        {
            /* LL */
            
 
 
        }
-       else
+       else if (AVLTreeCurrentNodeIsRight(child))
        {
            /* LR */
 
@@ -307,13 +322,13 @@ static int AVLTreeNodeAdjustBalance(BalanceBinarySearchTree *pBstree, AVLTreeNod
     else
     {
        /* R */
-       if (child == parent->left)
+       if (AVLTreeCurrentNodeIsLeft(child))
        {
            /* RL */
 
 
        }
-       else
+       else if (AVLTreeCurrentNodeIsRight(child))
        {
            /* RR */
 
