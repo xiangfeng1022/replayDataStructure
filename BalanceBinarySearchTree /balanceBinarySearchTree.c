@@ -59,9 +59,9 @@ static int AVLTreeNodeAdjustBalance(BalanceBinarySearchTree *pBstree, AVLTreeNod
 /* 获取AVL结点较高的子结点 */
 static AVLTreeNode *AVLTreeNodeGetChildTaller(AVLTreeNode *node);
 /* 当前结点是父结点的左子树 */
-static AVLTreeNode *AVLTreeCurrentNodeIsLeft(AVLTreeNode *node);
+static int AVLTreeCurrentNodeIsLeft(AVLTreeNode *node);
 /* 当前结点是父结点的右子树 */
-static AVLTreeNode *AVLTreeCurrentNodeIsRight(AVLTreeNode *node);
+static int AVLTreeCurrentNodeIsRight(AVLTreeNode *node);
 /* 左旋 */
 static int AVLTreeCurrentNodeRotateLeft(BalanceBinarySearchTree *pBstree, AVLTreeNode *grand);
 /* 右旋*/
@@ -116,12 +116,12 @@ int balanceBinarySearchTreeInit(BalanceBinarySearchTree **pBstree, int (*compare
 }
 
 /* 当前结点是父结点的左子树 */
-static AVLTreeNode *AVLTreeCurrentNodeIsLeft(AVLTreeNode *node)
+static int AVLTreeCurrentNodeIsLeft(AVLTreeNode *node)
 {
     return (node->parent != NULL) && (node == node->parent->left);
 }
 /* 当前结点是父结点的右子树 */
-static AVLTreeNode *AVLTreeCurrentNodeIsRight(AVLTreeNode *node)
+static int AVLTreeCurrentNodeIsRight(AVLTreeNode *node)
 {
     return (node->parent != NULL) && (node == node->parent->right);
 }
@@ -430,8 +430,8 @@ static int AVLTreeNodeAdjustBalance(BalanceBinarySearchTree *pBstree, AVLTreeNod
         else if (AVLTreeCurrentNodeIsRight(child))
         {
             /* LR */
-            AVLTreeCurrentNodeRotate(pBstree, parent);
-            AVLTreeCurrentNodeRotate(pBstree, node); 
+           AVLTreeCurrentNodeRotateLeft(pBstree, parent);
+            AVLTreeCurrentNodeRotateRight(pBstree, node);
         }
     }
     else
@@ -440,8 +440,8 @@ static int AVLTreeNodeAdjustBalance(BalanceBinarySearchTree *pBstree, AVLTreeNod
         if (AVLTreeCurrentNodeIsLeft(child))
         {
             /* RL */
-            AVLTreeCurrentNodeRotate(pBstree, parent);
-            AVLTreeCurrentNodeRotate(pBstree, node);
+             AVLTreeCurrentNodeRotateRight(pBstree, parent);
+            AVLTreeCurrentNodeRotateLeft(pBstree, node);
         }
         else if (AVLTreeCurrentNodeIsRight(child))
         {
