@@ -46,6 +46,8 @@ static AVLTreeNode *bstreeNodeSuccessor(AVLTreeNode *node);
 static int balanceBinarySearchTreeDeleteNode(BalanceBinarySearchTree *pBstree, AVLTreeNode *node);
 /* 添加结点之后的操作 */
 static int insertNodeAfter(BalanceBinarySearchTree *pBstree, AVLTreeNode *node);
+/* 删除结点之后的操作 */
+static int removeNodeAfter(BalanceBinarySearchTree *pBstree, AVLTreeNode *node);
 /* 计算结点的平衡因子 */
 static int AVLTreeNodeBalanceFactor(AVLTreeNode *node);
 /* 判断结点是否平衡 */
@@ -428,7 +430,8 @@ static int AVLTreeNodeAdjustBalance(BalanceBinarySearchTree *pBstree, AVLTreeNod
         else if (AVLTreeCurrentNodeIsRight(child))
         {
             /* LR */
-            AVLTreeCurrentNodeRotate();
+            AVLTreeCurrentNodeRotate(pBstree, parent);
+            AVLTreeCurrentNodeRotate(pBstree, node); 
         }
     }
     else
@@ -437,7 +440,8 @@ static int AVLTreeNodeAdjustBalance(BalanceBinarySearchTree *pBstree, AVLTreeNod
         if (AVLTreeCurrentNodeIsLeft(child))
         {
             /* RL */
-            AVLTreeCurrentNodeRotate();
+            AVLTreeCurrentNodeRotate(pBstree, parent);
+            AVLTreeCurrentNodeRotate(pBstree, node);
         }
         else if (AVLTreeCurrentNodeIsRight(child))
         {
@@ -447,6 +451,29 @@ static int AVLTreeNodeAdjustBalance(BalanceBinarySearchTree *pBstree, AVLTreeNod
     }
 }
 
+/* 删除结点之后的操作 */
+/* node参数是要删除的结点 */
+static int removeNodeAfter(BalanceBinarySearchTree *pBstree, AVLTreeNode *node)
+{
+      int ret = 0;
+    /* 时间复杂度是O(logN) */
+    while ( (node = node->parent) != NULL)
+    {
+        /* 程序执行到这里面的时候, 一定不止一个结点. */
+        if (AVLTreeNodeIsBalanced(node))
+        {
+            /* 如果结点是平衡的. 那就更新高度. */
+            AVLTreeNodeUpdateHeight(node);
+        }
+        else
+        {
+            /* node是最低不平衡结点 */
+            /* 调整平衡 */
+            AVLTreeNodeAdjustBalance(pBstree, node);
+        }
+    }
+    return ret;
+}
 /* 添加结点之后的操作 */
 /* 新添加的结点一定是叶子结点 */
 static int insertNodeAfter(BalanceBinarySearchTree *pBstree, AVLTreeNode *node)
@@ -793,6 +820,7 @@ static int balanceBinarySearchTreeDeleteNode(BalanceBinarySearchTree *pBstree, A
     /* 树的结点减1 */
     (pBstree->size)--;
 
+    /* 删除度为2的结点 */
     if (balanceBinarySearchTreeNodeHasTwochildrens(node))
     {
         /* 找到前驱结点 */
@@ -816,6 +844,9 @@ static int balanceBinarySearchTreeDeleteNode(BalanceBinarySearchTree *pBstree, A
             /* 度为1 且 它是根结点 */
             pBstree->root = child;
             delNode = node;
+            /* 删除的结点 */
+            removeNodeAfter(pBstree, delNode);
+
             // if (node)
             // {
             //     free(node);
@@ -835,6 +866,9 @@ static int balanceBinarySearchTreeDeleteNode(BalanceBinarySearchTree *pBstree, A
             }
             /* 释放结点 */
             delNode = node;
+            /* 删除的结点 */
+            removeNodeAfter(pBstree, delNode);
+
             // if (node)
             // {
             //     free(node);
@@ -848,6 +882,7 @@ static int balanceBinarySearchTreeDeleteNode(BalanceBinarySearchTree *pBstree, A
         if (node->parent == NULL)
         {
             delNode = node;
+            
             // if (node)
             // {
             //     free(node);
@@ -866,6 +901,9 @@ static int balanceBinarySearchTreeDeleteNode(BalanceBinarySearchTree *pBstree, A
             }
 
             delNode = node;
+            /* 删除的结点 */
+            removeNodeAfter(pBstree, delNode);
+            
             // if (node)
             // {
             //     free(node);
@@ -966,3 +1004,356 @@ int balanceBinarySearchTreeGetNodeSize(BalanceBinarySearchTree *pBstree, int *pS
 
     return pBstree->size;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
